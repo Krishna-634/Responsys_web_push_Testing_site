@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsys Web Push Test</title>
+</head>
+<body>
+  <h1>Responsys Web Push Test Page</h1>
+  <p>Click the button below to subscribe for Web Push Notifications.</p>
+
+  <button id="subscribeBtn">Subscribe to Notifications</button>
+
+  <script>
+    // --- Replace these values with your Responsys Web Push Config ---
+    const responsysConfig = {
+      serviceWorkerPath: "/riwebpush-sw.js", // This is the default SDK SW
+      clientid: "YOUR_CLIENT_ID_HERE", // Replace with Responsys Client ID
+      appid: "YOUR_APP_ID_HERE"        // Replace with Responsys App ID
+    };
+
+    // --- Load Responsys SDK ---
+    (function(d, s) {
+      var js = d.createElement(s);
+      js.src = "https://r.mtag.io/static/scripts/webpush/sdk/rigel-webpush.min.js";
+      js.onload = function() {
+        console.log("Responsys SDK loaded");
+      };
+      d.head.appendChild(js);
+    })(document, 'script');
+
+    // --- Subscribe User to Web Push ---
+    document.getElementById("subscribeBtn").onclick = function() {
+      if (!window.Rigel) {
+        alert("SDK not loaded yet. Wait a few seconds.");
+        return;
+      }
+
+      Rigel('initialize', responsysConfig);
+
+      Rigel('subscribe', {})
+        .then(function(result) {
+          console.log("Subscribed to Web Push:", result);
+          alert("Successfully subscribed! Check your Responsys logs.");
+        })
+        .catch(function(error) {
+          console.error("Subscription error:", error);
+          alert("Subscription failed. Check console.");
+        });
+    };
+  </script>
+
+</body>
+</html>
